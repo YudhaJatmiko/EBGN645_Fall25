@@ -1,0 +1,92 @@
+GAMS 48.6.1  67fbb04b Jan 23, 2025          DAX-DAC arm 64bit/macOS - 09/10/25 16:17:50 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1   
+   2  set i /hamburgers,hotdogs,frenchfries/ ;
+   3   
+   4  parameter
+   5  r(i) "--$/item-- revenue per unit sold"
+   6  /
+   7  hamburgers 1.5,
+   8  hotdogs 0.75,
+   9  frenchfries 0.25
+  10  / ;
+  11   
+  12  parameter c(i) "--$/item-- cost per unit sold"
+  13  /
+  14  hamburgers 0.75,
+  15  hotdogs 0.1,
+  16  frenchfries 0.05
+  17  / ;
+  18   
+  19  parameter h(i) "--hours/item-- hours required per item sold"
+  20  /
+  21  hamburgers 0.5,
+  22  hotdogs 0.2,
+  23  frenchfries 0.1
+  24  / ;
+  25   
+  26  scalar hbar "--hours-- total hours in a week" /40/;
+  27   
+  28  positive variable X(i) "--units-- production of units";
+  29  variable profit ;
+  30   
+  31  equation
+  32  eq_objfn "target of our optimization",
+  33  eq_hourlimit "cant work more than 40 hours per week"
+  34  ;
+  35   
+  36  eq_objfn.. profit =e= sum(i,(r(i)-c(i)) * X(i)) ;
+  37  * =e= "equal to"
+  38  * =g= "greater than"
+  39  * =l= "less than"
+  40   
+  41  eq_hourlimit.. hbar =g= sum(i,h(i) * X(i)) ;
+  42   
+  43  scalar sw_combo /%combo%/ ;
+****                   $181 $409
+**** 181  Closing '/' missing in scalar statement
+**** 409  Unrecognizable item - skip to find a new statement
+****        looking for a ';' or a key word to get started again
+  44   
+  45  equation eq_combo;
+  46  eq_combo$sw_combo.. X("frenchfries") =g= X("hotdogs") ;
+  47   
+  48  model ripley /all/ ;
+  49   
+  50  solve ripley using lp maximizing profit ;
+****                                          $257
+**** 257  Solve statement not checked because of previous errors
+  51   
+  52  execute_unload 'ripleysdata.gdx' ;
+  53   
+EXIT /Users/yudhajatmiko/VSCODE/Burger_class/simple_lp_examples/ripleysrestaurant.gms
+
+**** 3 ERROR(S)   0 WARNING(S)
+GAMS 48.6.1  67fbb04b Jan 23, 2025          DAX-DAC arm 64bit/macOS - 09/10/25 16:17:50 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  /Users/yudhajatmiko/VSCODE/Burger_class/simple_lp_examples/ripleysrestaurant.gms
+     2       54 EXIT           1      54  /Users/yudhajatmiko/VSCODE/Burger_class/simple_lp_examples/ripleysrestaurant.gms
+
+
+COMPILATION TIME     =        0.002 SECONDS      3 MB  48.6.1 67fbb04b DAX-DAC
+
+
+USER: Computational Economics EBGN 645               G250827|0002AO-GEN
+      Colorado School of Mines, Operations Research Department  DCE4628
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      /Users/yudhajatmiko/VSCODE/Burger_class/simple_lp_examples/ripleysrestaurant.gms
+Output     /Users/yudhajatmiko/VSCODE/Burger_class/simple_lp_examples/ripleysrestaurant.lst
+
+**** USER ERROR(S) ENCOUNTERED
