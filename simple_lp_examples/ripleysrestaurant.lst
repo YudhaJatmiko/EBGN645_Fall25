@@ -1,0 +1,218 @@
+GAMS 48.6.1  67fbb04b Jan 23, 2025          DAX-DAC arm 64bit/macOS - 09/17/25 10:23:09 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1   
+   2  set i /hamburgers,hotdogs,frenchfries/ ;
+   3   
+   4  parameter
+   5  r(i) "--$/item-- revenue per unit sold"
+   6  /
+   7  hamburgers 1.5,
+   8  hotdogs 0.75,
+   9  frenchfries 0.25
+  10  / ;
+  11   
+  12  parameter c(i) "--$/item-- cost per unit sold"
+  13  /
+  14  hamburgers 0.75,
+  15  hotdogs 0.1,
+  16  frenchfries 0.05
+  17  / ;
+  18   
+  19  parameter h(i) "--hours/item-- hours required per item sold"
+  20  /
+  21  hamburgers 0.5,
+  22  hotdogs 0.2,
+  23  frenchfries 0.1
+  24  / ;
+  25   
+  26  scalar hbar "--hours-- total hours in a week" /40/;
+  27   
+  28  positive variable X(i) "--units-- production of units";
+  29  variable profit ;
+  30   
+  31  equation
+  32  eq_objfn "target of our optimization",
+  33  eq_hourlimit "cant work more than 40 hours per week"
+  34  ;
+  35   
+  36  eq_objfn.. profit =e= sum(i,(r(i)-c(i)) * X(i)) ;
+  37  * =e= "equal to"
+  38  * =g= "greater than"
+  39  * =l= "less than"
+  40   
+  41  eq_hourlimit.. hbar =g= sum(i,h(i) * X(i)) ;
+  42   
+  43  scalar sw_combo /0/ ;
+  44   
+  45  equation eq_combo;
+  46  eq_combo$sw_combo.. X("frenchfries") =g= X("hotdogs") ;
+  47   
+  48  model ripley /all/ ;
+  49   
+  50  solve ripley using lp maximizing profit ;
+  51   
+  52  execute_unload 'ripleysdata_0.gdx' ;
+  53   
+EXIT /Users/yudhajatmiko/Documents/GitHub/EBGN645_Fall25/simple_lp_examples/ripleysrestaurant.gms
+GAMS 48.6.1  67fbb04b Jan 23, 2025          DAX-DAC arm 64bit/macOS - 09/17/25 10:23:09 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  /Users/yudhajatmiko/Documents/GitHub/EBGN645_Fall25/simple_lp_examples/ripleysrestaurant.gms
+     2       54 EXIT           1      54  /Users/yudhajatmiko/Documents/GitHub/EBGN645_Fall25/simple_lp_examples/ripleysrestaurant.gms
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  48.6.1 67fbb04b DAX-DAC
+GAMS 48.6.1  67fbb04b Jan 23, 2025          DAX-DAC arm 64bit/macOS - 09/17/25 10:23:09 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE ripley Using LP From line 50
+
+
+---- eq_objfn  =E=  target of our optimization
+
+eq_objfn..  - 0.75*X(hamburgers) - 0.65*X(hotdogs) - 0.2*X(frenchfries) + profit =E= 0 ; (LHS = 0)
+     
+
+---- eq_hourlimit  =G=  cant work more than 40 hours per week
+
+eq_hourlimit..  - 0.5*X(hamburgers) - 0.2*X(hotdogs) - 0.1*X(frenchfries) =G= -40 ; (LHS = 0)
+     
+
+---- eq_combo  =G=  
+
+                NONE
+
+GAMS 48.6.1  67fbb04b Jan 23, 2025          DAX-DAC arm 64bit/macOS - 09/17/25 10:23:09 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE ripley Using LP From line 50
+
+
+---- X  --units-- production of units
+
+X(hamburgers)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -0.75    eq_objfn
+       -0.5     eq_hourlimit
+
+X(hotdogs)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -0.65    eq_objfn
+       -0.2     eq_hourlimit
+
+X(frenchfries)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -0.2     eq_objfn
+       -0.1     eq_hourlimit
+
+
+---- profit  
+
+profit
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       eq_objfn
+
+GAMS 48.6.1  67fbb04b Jan 23, 2025          DAX-DAC arm 64bit/macOS - 09/17/25 10:23:09 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE ripley Using LP From line 50
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 4.000E+01, 4.000E+01] - Zero values observed as well
+Bound     [min, max] : [        NA,        NA] - Zero values observed as well
+Matrix    [min, max] : [ 1.000E-01, 1.000E+00]
+
+GAMS 48.6.1  67fbb04b Jan 23, 2025          DAX-DAC arm 64bit/macOS - 09/17/25 10:23:09 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE ripley Using LP From line 50
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           3     SINGLE EQUATIONS            2
+BLOCKS OF VARIABLES           2     SINGLE VARIABLES            4
+NON ZERO ELEMENTS             7
+
+
+GENERATION TIME      =        0.003 SECONDS      4 MB  48.6.1 67fbb04b DAX-DAC
+GAMS 48.6.1  67fbb04b Jan 23, 2025          DAX-DAC arm 64bit/macOS - 09/17/25 10:23:09 Page 7
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE ripley Using LP From line 50
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   ripley              OBJECTIVE  profit
+     TYPE    LP                  DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  50
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              130.0000
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- GAMS/CPLEX licensed for continuous and discrete problems.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 22.1.1.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.00 ticks)
+
+
+Optimal solution found
+Objective:          130.000000
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU eq_objfn            .              .              .             1.0000      
+---- EQU eq_hourli~       -40.0000       -40.0000        +INF           -3.2500      
+---- EQU eq_combo                  (EMPTY)
+
+  eq_objfn  target of our optimization
+  eq_hourlimit  cant work more than 40 hours per week
+
+---- VAR X  --units-- production of units
+
+                   LOWER          LEVEL          UPPER         MARGINAL
+
+hamburgers           .              .            +INF           -0.8750      
+hotdogs              .           200.0000        +INF             .          
+frenchfries          .              .            +INF           -0.1250      
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR profit            -INF          130.0000        +INF             .          
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 48.6.1  67fbb04b Jan 23, 2025          DAX-DAC arm 64bit/macOS - 09/17/25 10:23:09 Page 8
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+EXECUTION TIME       =        0.023 SECONDS      4 MB  48.6.1 67fbb04b DAX-DAC
+
+
+USER: Computational Economics EBGN 645               G250827|0002AO-GEN
+      Colorado School of Mines, Operations Research Department  DCE4628
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      /Users/yudhajatmiko/Documents/GitHub/EBGN645_Fall25/simple_lp_examples/ripleysrestaurant.gms
+Output     /Users/yudhajatmiko/Documents/GitHub/EBGN645_Fall25/simple_lp_examples/ripleysrestaurant.lst
