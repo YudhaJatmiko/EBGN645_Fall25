@@ -18,7 +18,7 @@ frenchfries 0.05
 
 parameter h(i) "--hours/item-- hours required per item sold"
 /
-hamburgers 0.5,
+hamburgers 0.1,
 hotdogs 0.2,
 frenchfries 0.1
 / ;
@@ -44,6 +44,15 @@ scalar sw_combo /%combo%/ ;
 
 equation eq_combo;
 eq_combo$sw_combo.. X("frenchfries") =g= X("hotdogs") ;
+
+set j "inputs" /Bun, Cheese, Beef, Sausage, Potato/ ;
+table inputs_in(j,i)
+$ondelim
+$include ripley_inputs.csv
+$offdelim
+
+;
+$exit
 
 model ripley /all/ ; 
 
